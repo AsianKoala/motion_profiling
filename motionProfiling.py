@@ -11,7 +11,7 @@ class MotionState:
         return MotionState(self.x + self.v * dt + 0.5 * self.a * dt ** 2, self.v + self.a * dt, self.a)
 
     def integrate(self, dt):
-        return self.v * dt + 0.5 * self.a * dt ** 2
+        return abs(self.v * dt + 0.5 * self.a * dt ** 2)
     
     def __str__(self) -> str:
         return 'x: {}, v: {}, a: {}'.format(self.x, self.v, self.a)
@@ -29,7 +29,7 @@ class MotionProfile:
     def __init__(self, start_state: MotionState, end_state: MotionState, constraints: MotionConstraints):
         self.profileDuration = None
         self.dt1 = (constraints.v_max - start_state.v) / constraints.a_max
-        self.dt3 = (end_state.v - constraints.v_max) / constraints.d_max
+        self.dt3 = abs((end_state.v - constraints.v_max) / constraints.d_max)
         self.accel_state = MotionState(start_state.x, start_state.v, constraints.a_max)
         self.deccel_state = MotionState(end_state.x, end_state.v, constraints.d_max).calculate(-self.dt3)
 
@@ -55,3 +55,17 @@ def plot(profile):
     plt.show()
     
 
+a_max = 12
+v_max = 10
+d_max = 4
+target = 30
+constraints = MotionConstraints(v_max, a_max, d_max)
+start_state = MotionState(0, 0, 0)
+end_state = MotionState(target, 0, 0)
+profile = MotionProfile(start_state, end_state, constraints)
+print('dt1: {}\ndt2: {}\ndt3: {}\nprofile duration'.format(profile.dt1, profile.dt2, profile.dt3, profile.profileDuration))
+# print('int 1: {}\nint 2: {}\nint 3: {}'.format(
+#     profile.accel_state.integrate(profile.dt1), 
+#     profile.cruise_state.integrate(profile.dt2), 
+#     profile.deccel_state.integrate(profile.dt3
+# )))
