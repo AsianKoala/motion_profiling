@@ -84,8 +84,8 @@ def main():
     d_max = 16
     # target = 80
     constraints = MotionConstraints(v_max, a_max, d_max)
-    start_state = MotionState(80, 0, 0)
-    end_state = MotionState(0, 0, 0)
+    start_state = MotionState(0, 0, 0)
+    end_state = MotionState(80, 0, 0)
     profile = MotionProfile(start_state, end_state, constraints)
     print('dt1: {}\ndt2: {}\ndt3: {}\nprofile duration {}\n integral: {}'.format(
         profile.accel_time, profile.cruise_time, profile.deccel_time, profile.profileDuration, profile.total_integral))
