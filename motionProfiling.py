@@ -38,7 +38,7 @@ class MotionProfile:
 
         accel_end_state = self.accel_state.calculate(self.accel_time)
         self.cruise_state = MotionState(accel_end_state.x, accel_end_state.v, 0)
-        delta_x = end_state.x - start_state.x
+        delta_x = abs(end_state.x - start_state.x)
         self.cruise_time = (delta_x - self.accel_state.integrate(self.accel_time) - 
             self.deccel_state.integrate(self.deccel_time)) / constraints.v_max
 
@@ -82,10 +82,10 @@ def main():
     a_max = 16
     v_max = 40
     d_max = 16
-    target = 80
+    # target = 80
     constraints = MotionConstraints(v_max, a_max, d_max)
-    start_state = MotionState(0, 0, 0)
-    end_state = MotionState(target, 0, 0)
+    start_state = MotionState(80, 0, 0)
+    end_state = MotionState(0, 0, 0)
     profile = MotionProfile(start_state, end_state, constraints)
     print('dt1: {}\ndt2: {}\ndt3: {}\nprofile duration {}\n integral: {}'.format(
         profile.accel_time, profile.cruise_time, profile.deccel_time, profile.profileDuration, profile.total_integral))
